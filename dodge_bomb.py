@@ -12,6 +12,23 @@ DELTA = {pg.K_UP:(0, -5),
          pg.K_RIGHT:(5, 0),
          }
 
+def cheak_bound(rct: pg.Rect):
+    """
+    引数で与えられたRectが画面の中か外かを判定する
+    引数：こうかとんRect or 爆弾Rect
+    戻り値：真理値タプル（横，縦）／画面内：True，画面外：False
+    """
+
+    yoko, tate = True, True
+    if rct.left < 0 or WIDTH < rct.right:
+        yoko = False
+    if rct.top < 0 or HEIGHT < rct.bottom:
+        tate = False
+    return yoko, tate
+
+
+
+
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -39,6 +56,10 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
+        
+        if kk_rct.colliderect(bb_rct):
+            print("ゲームオーバー")
+            return 
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
@@ -57,8 +78,18 @@ def main():
                 # if key_lst[pg.K_RIGHT]:
                 #     sum_mv[0] += 5
         kk_rct.move_ip(sum_mv)
+        if cheak_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
+        
         bb_rct.move_ip(vx, vy)
+        bb_rct.move_ip(vx, vy)  # 爆弾動く
+        yoko, tate = cheak_bound(bb_rct)
+        if not yoko:  # 横にはみ出てる
+            vx *= -1
+        if not tate:  # 縦にはみ出てる
+            vy *= -1
+
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
