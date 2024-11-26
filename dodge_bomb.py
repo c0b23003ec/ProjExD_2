@@ -1,6 +1,7 @@
 import os
 import random
 import sys
+import time
 import pygame as pg
 
 
@@ -27,6 +28,34 @@ def cheak_bound(rct: pg.Rect):
     return yoko, tate
 
 
+def gameover(screen: pg.Surface):
+    black_img = pg.Surface((1100, 650))
+    pg.draw.rect(black_img, 0, (0, 0, 1100, 650))
+    black_rct = black_img.get_rect()
+    black_rct.center = WIDTH/2, HEIGHT/2
+    black_img.set_alpha(128)
+    screen.blit(black_img, black_rct)
+
+    text_gameover = pg.font.Font(None, 80)
+    text = text_gameover.render("Game Over", True, (255, 255, 255))
+    text_rect = text.get_rect()
+    text_rect.center=(WIDTH/2, HEIGHT/2)
+    screen.blit(text, text_rect)
+
+
+    kk_cry = pg.image.load("fig/8.png")      
+    kk_cry_rct_1 = kk_cry.get_rect()
+    kk_cry_rct_2 = kk_cry.get_rect()
+    kk_cry_rct_1.center =WIDTH/2-200, HEIGHT/2
+    kk_cry_rct_2.center =WIDTH/2+200, HEIGHT/2
+    screen.blit(kk_cry, kk_cry_rct_1)
+    screen.blit(kk_cry, kk_cry_rct_2)
+
+    print("ゲームオーバー")
+    #pg.display.update()
+    time.sleep(5)
+    return black_rct
+    
 
 
 
@@ -47,6 +76,10 @@ def main():
     bb_rct.centery = random.randint(0, HEIGHT)
     vx, vy = +5, +5  # 爆弾速度ベクトル
 
+
+
+    
+
     clock = pg.time.Clock()
     tmr = 0
 
@@ -58,8 +91,9 @@ def main():
                 return
         
         if kk_rct.colliderect(bb_rct):
-            print("ゲームオーバー")
-            return 
+            return gameover(screen)
+
+
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
