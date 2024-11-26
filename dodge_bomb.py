@@ -92,7 +92,6 @@ def main():
         if kk_rct.colliderect(bb_rct):
             return gameover(screen)
 
-
         screen.blit(bg_img, [0, 0]) 
 
         key_lst = pg.key.get_pressed()
@@ -114,8 +113,7 @@ def main():
         if cheak_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
         screen.blit(kk_img, kk_rct)
-        
-        bb_rct.move_ip(vx, vy)
+
         bb_rct.move_ip(vx, vy)  # 爆弾動く
         yoko, tate = cheak_bound(bb_rct)
         if not yoko:  # 横にはみ出てる
